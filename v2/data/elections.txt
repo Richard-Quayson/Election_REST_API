@@ -1,0 +1,49 @@
+[
+    {
+        "election_code": "2023ASC",
+        "election_name": "2023 ASC Election",
+        "election_startdate": "2023-03-27 13:57:30.769268",
+        "election_period": 72,
+        "positions": [
+            {
+                "position_id": "001",
+                "position_name": "ASC President",
+                "candidates": [
+                    {
+                        "candidate_id": "12892023",
+                        "candidate_voters": [
+                            "55772024",
+                            "55732024"
+                        ]
+                    },
+                    {
+                        "candidate_id": "55732024",
+                        "candidate_voters": []
+                    },
+                    {
+                        "candidate_id": "12782025",
+                        "candidate_voters": []
+                    }
+                ]
+            },
+            {
+                "position_id": "002",
+                "position_name": "JEC Chairperson",
+                "candidates": [
+                    {
+                        "candidate_id": "55772024",
+                        "candidate_voters": []
+                    },
+                    {
+                        "candidate_id": "12782026",
+                        "candidate_voters": []
+                    },
+                    {
+                        "candidate_id": "29982026",
+                        "candidate_voters": []
+                    }
+                ]
+            }
+        ]
+    }
+]
