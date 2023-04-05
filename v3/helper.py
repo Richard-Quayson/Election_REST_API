@@ -10,7 +10,6 @@ from firebase_admin import credentials, firestore, initialize_app
 cred = credentials.Certificate("key.json")
 default_app = initialize_app(cred)
 database = firestore.client()
-# todo_reference = database.collection("todos")
 
 # the first year group for Ashesi University
 FIRST_YEAR_GROUP = 2002
@@ -166,7 +165,6 @@ def valid_voter_info(request, unique_keys):
     # if no voter has been registered, skip unique test
     if len(voters_data) == 0:
         return {"data": voter_info}
-    print(voters_data)
     
     # ensure keys are unique
     # if unique contraints fails, return appropriate response

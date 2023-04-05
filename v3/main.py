@@ -1,8 +1,9 @@
 # import necessary libraries
 import os
 import json
+# import functions_framework
 from datetime import timedelta
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify
 
 # import helper methods
 from helper import (
@@ -19,18 +20,38 @@ from helper import (
 voting_app = Flask(__name__)
 
 
-# def some_function(request):
-#     data = json.loads(request.data)
-#     if request.method == "POST" and "student_id" in data.keys():
-#         register_voter()
-#     elif request.method == "GET" and "student_id" in data.keys():
-#         get_voter()
+# flask app to handle all requests in the API
+# @functions_framework.http
+voting_app.route("/", methods=["GET", "POST", "PATCH", "PUT", "DELETE"])
+def voting_system(request):
+    if "voters" in request.path:
+        if request.method == "POST":
+            return register_voter(request)
+        elif request.method == "PATCH":
+            return deregister_voter(request)
+        elif request.method == "GET":
+            return get_voters(request)
+        elif request.method == "PUT":
+            return update_voter(request)
+
+    elif "elections" in request.path:
+        if request.method == "POST":
+            return create_election(request)
+        elif request.method == "GET":
+            return retrieve_election(request)
+        elif request.method == "DELETE":
+            return delete_election(request)
+        elif request.method == "POST" and "vote" in request.path:
+            return vote(request)
+
+    else:
+        return jsonify({"message": "Invalid endpoint!"}), 404
     
 
 # _____________________________________________________________________________________________________________________
 # REGISTER AN ASHESI STUDENT AS A VOTER
-@voting_app.route("/voters/register_voter/", methods=["POST"])
-def register_voter():
+# @voting_app.route("/voters/register_voter/", methods=["POST"])
+def register_voter(request):
     """handles a POST request to created a voter and returns a JSON
     object of the voter's information if all validation and constraints
     are met. Else, returns JSON representation of the validation or constraint failure
@@ -61,8 +82,8 @@ def register_voter():
 
 # __________________________________________________________________________________________________________________________
 # DEREGISTER A STUDENT AS A VOTER
-@voting_app.route("/voters/de_register/<value>/", methods=["PATCH"])
-def deregister_voter(value):
+# @voting_app.route("/voters/de_register/<value>/", methods=["PATCH"])
+def deregister_voter(request):
     """deregisters a specified voter (voter with given student id) or 
     specified voters (students in a particular year group) by setting their
     is_registered attribute to false
@@ -74,6 +95,13 @@ def deregister_voter(value):
         JSON: JSON representation of students deregistered or appropriate message
         if an exception occurs
     """
+    if request.data.get("student_id"):
+        value = request.data.get("student_id")
+        print(value)
+    elif request.data.get("year_group"):
+        value = request.data.get("year_group")
+    else:
+        return jsonify({"message": "Invalid attribute!"}), 400
     
     # check if the value parsed is a year group
     # else, assume it is a student id
@@ -129,8 +157,8 @@ def deregister_voter(value):
 
 # ____________________________________________________________________________________________________________________________________
 # UPDATE REGISTERED VOTER'S INFORMATION
-@voting_app.route("/voters/update_voter/<student_id>/", methods=["PUT"])
-def update_voter(student_id):
+# @voting_app.route("/voters/update_voter/<student_id>/", methods=["PUT"])
+def update_voter(request):
     """updates the details of the voter with the specified student id if it exists
     else it creates a new record in the database if the request data meet all specified constraints
 
@@ -140,6 +168,10 @@ def update_voter(student_id):
     Returns:
         dict: JSON object of the updated or created object
     """
+    if request.data.get("student_id"):
+        student_id = request.data.get("student_id")
+    else:
+        return jsonify({"message": "Invalid attribute!"}), 400
     
     # ensure that the student id is valid
     if not valid_student_id(student_id):
@@ -188,8 +220,8 @@ def update_voter(student_id):
 
 # ________________________________________________________________________________________________________________________________________________
 # RETRIEVE A REGISTERED VOTER 
-@voting_app.route("/voters/get/", methods=["GET"])
-def retrieve_voters():
+# @voting_app.route("/voters/get/", methods=["GET"])
+def retrieve_voters(request):
     """uses all specified arguments (attributes of voter) parsed for filtering
     matching voters and returns the result. If no attribute is parsed, it retrieves
     all users If any exception occur, it returns an appropriate message of the exception
@@ -266,7 +298,7 @@ def retrieve_voters():
             elif filter_dict[key].lower() == "false":
                 filter_dict[key] = False
             else:
-                return jsonify({"message": "Invalid valud for is_registered attribute!"}), 400
+                return jsonify({"message": "Invalid value for is_registered attribute!"}), 400
             
         else:
             if int(filter_dict["year_group"]) < FIRST_YEAR_GROUP:
@@ -307,9 +339,8 @@ def retrieve_voters():
 
 # ______________________________________________________________________________________________________________________________________________________________
 # CREATE AN ELECTION
-@voting_app.route("/elections/create_election/", methods=["POST"])
-def create_election():
-    
+# @voting_app.route("/elections/create_election/", methods=["POST"])
+def create_election(request):
     
     # ensure that the request's data is not empty
     if not valid_request_body(request):
@@ -373,10 +404,17 @@ def create_election():
 
 # ____________________________________________________________________________________________________________________________________________________
 # RETRIEVE AN ELECTION
-@voting_app.route("/elections/get/<election_code>/", methods=["GET"])
-def retrieve_election(election_code):
+# @voting_app.route("/elections/get/<election_code>/", methods=["GET"])
+def retrieve_election(request):
+
     # read election file
     elections_data = ELECTIONS_COLLECTION.get()
+
+    # get election code from request
+    if request.args.get("election_code") == None:
+        return jsonify(elections_data)
+    
+    election_code = request.args.get("election_code")
     
     # ensure that there are existing data
     if not elections_data:
@@ -393,10 +431,16 @@ def retrieve_election(election_code):
 
 # _______________________________________________________________________________________________________________________________________________________
 # DELETE AN ELECTION
-@voting_app.route("/elections/delete_election/<election_code>/", methods=["DELETE"])
-def delete_election(election_code):
+# @voting_app.route("/elections/delete_election/<election_code>/", methods=["DELETE"])
+def delete_election(request):
     # read election file
     elections_data = ELECTIONS_COLLECTION.get()
+
+    # get election code from request
+    if request.data.get("election_code"):
+        election_code = request.data.get("election_code")
+    else:
+        return jsonify({"message": "Election code not provided!"}), 400
     
     # ensure that there are existing data
     if not elections_data:
@@ -411,8 +455,8 @@ def delete_election(election_code):
 
 # ________________________________________________________________________________________________________________________________________________________
 # VOTE IN AN ELECTION
-@voting_app.route("/elections/vote/<election_code>/", methods=["POST"])
-def vote(election_code):
+# @voting_app.route("/elections/vote/<election_code>/", methods=["POST"])
+def vote(request):
     
     # get position from URL argument
     position_id = request.args.get("position_id")
@@ -426,6 +470,10 @@ def vote(election_code):
     
     # get request data
     vote_info = json.loads(request.data)
+
+    # get election code from data
+    if request.data.get("election_code"):
+        election_code = request.data.get("election_code")
     
     # ensure that the data contains student_id and candidate_id
     VOTING_KEYS = [
@@ -441,7 +489,7 @@ def vote(election_code):
     if not student_id_is_valid:
         return jsonify({"message": "Student ID is not valid."}), 400
     
-    # ensure that the candidata id is valid
+    # ensure that the candidate id is valid
     student_id_is_valid = valid_student_id(vote_info["candidate_id"])
     if not student_id_is_valid:
         return jsonify({"message": "Candidate ID is not valid."}), 400
@@ -520,5 +568,5 @@ def vote(election_code):
         
     return jsonify(election_info)
 
-if __name__=='__main__':
-    voting_app.run(debug=True)
+# if __name__=='__main__':
+#     voting_app.run()
