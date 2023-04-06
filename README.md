@@ -1,4 +1,4 @@
-# Election_REST_API
+# Ashesi Voting System API
 
 This project creates APIs for an election voting system. The API provides **functionalities**
 that allow a client to:
@@ -78,7 +78,7 @@ tests for voter information. However, it assumes validation of request data for 
 2. Improve validation of voter's information.
 3. Provide endpoints for managing (creating, updating, deleting, and retrieving) an election's positions and candidates.
 4. Improve runtime filter for retrieving voter information (e.g. student_id, email, should have higher priorities since they are unique).
-5. ...
+5. Possibly create a frontend and integrate with this API (😶‍🌫️🧐🤯).
 
 
 ## Message:
