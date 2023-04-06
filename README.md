@@ -74,11 +74,11 @@ For an overview on the project, check the file task_instructions.pdf in v1, v2, 
 ## Future updates:
 The project defined helper functions that performed uniqeueness tests for data. It also defines some amount of validation
 tests for voter information. However, it assumes validation of request data for creating an election. As such, future updates will:
-1. Implement validation for election data.
-2. Improve validation of voter's information.
-3. Provide endpoints for managing (creating, updating, deleting, and retrieving) an election's positions and candidates.
-4. Improve runtime filter for retrieving voter information (e.g. student_id, email, should have higher priorities since they are unique).
-5. Possibly create a frontend and integrate with this API (😶‍🌫️🧐🤯).
+- [x] Implement validation for election data.
+- [x] Improve validation of voter's information.
+- [x] Provide endpoints for managing (creating, updating, deleting, and retrieving) an election's positions and candidates.
+- [x] Improve runtime filter for retrieving voter information (e.g. student_id, email, should have higher priorities since they are unique).
+- [x] Possibly create a frontend and integrate with this API (😶‍🌫️🧐🤯).
 
 
 ## Message:
