@@ -20,7 +20,7 @@ from helper import (
 voting_app = Flask(__name__)
 
 
-# flask app to handle all requests in the API
+# http function to handle all requests in the API
 @functions_framework.http
 # voting_app.route("/", methods=["GET", "POST", "PATCH", "PUT", "DELETE"])
 def voting_system(request):
