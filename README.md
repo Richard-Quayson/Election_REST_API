@@ -57,7 +57,7 @@ You can check tests performed on the API in the test_result.pdf and test_result_
 
 ## General (for v1 and v2)
 To run the program, set up a virtual environment and install the packages in the requirements.txt
-file. Activate the virtual environment, move into the v2 directory in your terminal and run the 
+file. Activate the virtual environment, move into the version's directory (i.e. v1, v2 or v3) in your terminal and run the 
 voting_system.py file. You can test the API functionalities using any HTTP client like [Postman](https://www.postman.com/)
 
 ```Python
