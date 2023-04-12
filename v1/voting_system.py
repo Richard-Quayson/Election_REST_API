@@ -136,7 +136,7 @@ def deregister_voter(value):
 def update_voter(student_id):
     """updates the details of the voter with the specified student id if it exists
     else it creates a new record in the database if the request data meet all specified constraints
-
+iva
     Args:
         student_id (str): the voter's student id
 
