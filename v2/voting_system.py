@@ -293,7 +293,7 @@ def retrieve_voters():
     # ensure that the result list is not empty
     if not final_result_list:
         return jsonify({"message": "No voter found with the provided details"}), 404
-            
+    print("I'm here")
     return jsonify(final_result_list)
 
 

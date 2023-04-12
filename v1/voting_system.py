@@ -4,7 +4,7 @@ from datetime import timedelta
 from flask import Flask, jsonify, request
 
 # import helper methods
-from v1.helper import (
+from helper import (
     valid_request_body, read_from_file, write_to_file, 
     valid_voter_info, valid_student_id, valid_keys,
     key_is_unique, get_voters,
